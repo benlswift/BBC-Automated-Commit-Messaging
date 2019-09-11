@@ -1,6 +1,8 @@
 from flask import Flask, request
 import json
 import requests
+import os
+import slack
 
 app = Flask(__name__)
 
@@ -11,6 +13,18 @@ def index():
 @app.route('/hello')
 def hello_world():
     return 'Hello World!'
+
+def postToSlack(message):
+
+    #slack_token = os.environ["xoxb-6084091907-594909232454-0bcWHJKV7duUqklIuklcLo7M"]
+    client = slack.WebClient(token="xoxb-6084091907-594909232454-0bcWHJKV7duUqklIuklcLo7M")
+
+    client.chat_postMessage(
+      channel="#automationplayground",
+      text=message
+    )
+    
+    return "Success"
 
 @app.route('/payload', methods=['GET', 'POST'])
 def payload():
@@ -25,7 +39,8 @@ def payload():
         if len(removedFiles) != 0:
             path += removedFiles
 
-        message = payload['commits'][0]['message'] #get the commit message            
+        message = payload['commits'][0]['message'] #get the commit message
+
         commitMsg = " has " + message #write out the commit message
 
         #what if more than 1 file?
@@ -47,7 +62,10 @@ def payload():
             
         msg = name + commitMsg + fileMsg #write message to be printed
         print(msg)
+        #run the slack function to post to Slack
+        #postToSlack(msg)
         return msg
+    
     else:
         return 'Hello'
 
