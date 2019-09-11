@@ -15,26 +15,37 @@ def hello_world():
 @app.route('/payload', methods=['GET', 'POST'])
 def payload():
     if request.method == 'POST':
-        payload = request.get_json() #get the whole json
+        payload = request.get_json() #get the whole json -> then split it into necessary info 
         name = payload['commits'][0]['committer']['name'] #get the name of the committer
         path = payload['commits'][0]['modified'] #get the file paths of the committed files
+        addedFiles = payload['commits'][0]['added']#files can also be added
+        removedFiles = payload['commits'][0]['removed']#or removed
+        if len(addedFiles) != 0:#add added/removed files to list of file paths
+            path += addedFiles
+        if len(removedFiles) != 0:
+            path += removedFiles
+
+        message = payload['commits'][0]['message'] #get the commit message            
+        commitMsg = " has " + message #write out the commit message
+
         #what if more than 1 file?
-        numOfFiles = len(path) #get the path of each file in commit
         #find number of files
         #loop through the files
         #create list of file's name & path
         #loop through this list when printing
-        i = 0
-        while numOfFiles >= 0:
-            file = path[i].split('/')
-            i = i + 1
-            numOfFiles = numOfFiles - 1
-        #while numFiles > 0 print file path
-        message = payload['commits'][0]['message'] #get the commit message
-        nameMsg = "Name: " + name
-        fileMsg = "\nFolder: " + file[0] + "\nApp: " + file[1] + "\nOS: " + file[2] + "\nVersion: " + file[3] + "\nFile: " + file[4]
-        commitMsg = "\nMessage: " + message
-        msg = nameMsg + fileMsg + commitMsg + numOfFiles
+        
+        numOfFiles = len(path) #get how many files have been committed
+        i = 0 #number of file in list
+        fileMsg = "\n" 
+        while numOfFiles >= 1:  #while numFiles > 0 print file path
+
+            file = path[i].split('/') #split the path into components
+            fileMsg += "\nOn the " + file[1] + " app on " + file[2] + " version " + file[3] + " file name " + file[4]
+            
+            numOfFiles -= 1 #used as counter
+            i += 1
+            
+        msg = name + commitMsg + fileMsg #write message to be printed
         print(msg)
         return msg
     else:
