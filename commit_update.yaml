@@ -1,0 +1,21 @@
+testing: True #If a 'testing' key is present in the root of the YAML the message won't actually be posted to Slack
+
+slack:
+  token: 'xoxb-6084091907-594909232454-0bcWHJKV7duUqklIuklcLo7M' #Your Slack token
+  channel: '#automationplayground' #The channel messages shal be posted to
+  uploadChannel: '#automationplayground' #The channel that files will be uploaded to. Slack posts a message every time a file is uploaded so this should be a channel that isn't read
+  includeScreenshotsInMessages: True #Set to True or simply include the key in this section to have Hive_Slack_Bridge upload any screenshots that it finds and attach them to the message
+  preambles: #A list of message introductions.
+    - "Hi there,"
+    - "Hey, just to let you know"
+    - "ATTENTION!"
+    - "Thought you might like to know"
+  changed:
+    - "has changed"
+    - "has modified"
+    - "has been busy on"
+    - "has done some work on"
+  commitMessage:
+    - "their commit message is:"
+    - "they've"
+    - "they have"
