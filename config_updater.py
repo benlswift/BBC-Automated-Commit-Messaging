@@ -23,7 +23,6 @@ def postToSlack(message):
         tokenCode = out['slack']['token']# get the token from the yaml file
         channelCode = out['slack']['channel']# get the channel from the yaml file
         
-    #slack_token = os.environ["xoxb-6084091907-594909232454-0bcWHJKV7duUqklIuklcLo7M"]
     client = slack.WebClient(token=tokenCode)
 
     client.chat_postMessage(
